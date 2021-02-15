@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
+import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.draco.eeku.models.Preset
 import com.draco.eeku.repositories.Presets
@@ -18,10 +19,17 @@ class AudioSessionReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION) {
-            val id = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
-            if (id != -1)
-                Eeku(id, getSavedPreset(context))
+        if (intent.action != AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
+            return
+
+        val sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
+        if (sessionId == -1)
+            return
+
+        val savedPreset = getSavedPreset(context)
+        Eeku(sessionId, savedPreset).also {
+            it.enable()
+            Toast.makeText(context, "Setup Eeku (${savedPreset.displayName}) sessionId: $sessionId", Toast.LENGTH_SHORT).show()
         }
     }
 }

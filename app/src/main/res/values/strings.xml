@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Eeku</string>
+
+    <string name="pref_key_preset_id">preset_id</string>
+
+    <string name="pref_title_preset_dropdown">Preset</string>
+    <string name="pref_key_preset_dropdown">preset_dropdown</string>
 </resources>

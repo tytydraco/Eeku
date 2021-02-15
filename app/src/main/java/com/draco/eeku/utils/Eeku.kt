@@ -17,12 +17,19 @@ class Eeku(sessionId: Int, preset: Preset) {
             val eqBand = DynamicsProcessing.EqBand(true, pair.first, pair.second)
             equalizer.setBand(index, eqBand)
         }
+
+        processing.setPostEqAllChannelsTo(equalizer)
+    }
+
+    fun enable() {
+        processing.enabled = true
+    }
+
+    fun disable() {
+        processing.enabled = false
     }
 
     init {
-        Log.d("Initialized", "EQ")
         setupBandsForMap(preset.map)
-        processing.setPostEqAllChannelsTo(equalizer)
-        processing.enabled = true
     }
 }
