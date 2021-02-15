@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.draco.eeku.R
-import com.draco.eeku.models.Presets
+import com.draco.eeku.repositories.Presets
 import com.draco.eeku.viewmodels.ConfigActivityViewModel
 
 class ConfigActivity : AppCompatActivity() {

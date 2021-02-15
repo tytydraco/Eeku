@@ -7,7 +7,7 @@ import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
 import androidx.preference.PreferenceManager
 import com.draco.eeku.models.Preset
-import com.draco.eeku.models.Presets
+import com.draco.eeku.repositories.Presets
 import com.draco.eeku.utils.Eeku
 
 class AudioSessionReceiver : BroadcastReceiver() {

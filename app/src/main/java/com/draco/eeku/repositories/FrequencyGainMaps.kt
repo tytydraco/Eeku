@@ -1,4 +1,4 @@
-package com.draco.eeku.models
+package com.draco.eeku.repositories
 
 import com.draco.eeku.utils.DecibelUtils
 

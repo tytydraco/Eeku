@@ -1,4 +1,6 @@
-package com.draco.eeku.models
+package com.draco.eeku.repositories
+
+import com.draco.eeku.models.Preset
 
 val Presets = listOf(
     Preset(

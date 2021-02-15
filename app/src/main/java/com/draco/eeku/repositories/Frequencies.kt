@@ -1,4 +1,4 @@
-package com.draco.eeku.models
+package com.draco.eeku.repositories
 
 object Frequencies {
     const val SUB_BASS =      60f
