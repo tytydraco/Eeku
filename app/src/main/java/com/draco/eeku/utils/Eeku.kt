@@ -1,7 +1,6 @@
 package com.draco.eeku.utils
 
 import android.media.audiofx.DynamicsProcessing
-import android.util.Log
 import com.draco.eeku.models.Preset
 
 class Eeku(sessionId: Int, preset: Preset) {
@@ -12,13 +11,13 @@ class Eeku(sessionId: Int, preset: Preset) {
         preset.map.size
     )
 
-    private fun setupBandsForMap(map: Map<Float, Float>) {
+    private fun setupBandsForMap(map: Map<Int, Float>) {
         map.toList().forEachIndexed { index, pair ->
-            val eqBand = DynamicsProcessing.EqBand(true, pair.first, pair.second)
+            val eqBand = DynamicsProcessing.EqBand(true, pair.first.toFloat(), pair.second)
             equalizer.setBand(index, eqBand)
         }
 
-        processing.setPostEqAllChannelsTo(equalizer)
+        processing.setPreEqAllChannelsTo(equalizer)
     }
 
     fun enable() {

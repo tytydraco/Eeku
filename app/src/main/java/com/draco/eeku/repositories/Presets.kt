@@ -9,8 +9,13 @@ val Presets = listOf(
         FrequencyGainMaps.FLAT
     ),
     Preset(
-        "less_bright",
-        "Less Bright",
-        FrequencyGainMaps.LESS_BRIGHT
+        "v_shape",
+        "V Shaped",
+        FrequencyGainMaps.V_SHAPE
+    ),
+    Preset(
+        "punchy",
+        "Punchy",
+        FrequencyGainMaps.PUNCHY
     )
 )
