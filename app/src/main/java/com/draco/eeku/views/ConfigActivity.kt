@@ -2,7 +2,6 @@ package com.draco.eeku.views
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -27,7 +26,7 @@ class ConfigActivity : AppCompatActivity() {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
         spinner = findViewById(R.id.spinner)
 
-        val adapter = ArrayAdapter(
+        val spinnerAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             Presets.map { it.displayName }.toTypedArray()
@@ -44,7 +43,7 @@ class ConfigActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        spinner.adapter = adapter
+        spinner.adapter = spinnerAdapter
 
         val savedPresetIndex = Presets.indexOf(viewModel.getSavedPreset())
         spinner.setSelection(savedPresetIndex)
