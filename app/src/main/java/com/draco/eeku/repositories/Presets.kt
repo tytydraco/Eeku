@@ -12,10 +12,5 @@ val Presets = listOf(
         "v_shape",
         "V Shaped",
         FrequencyGainMaps.V_SHAPE
-    ),
-    Preset(
-        "punchy",
-        "Punchy",
-        FrequencyGainMaps.PUNCHY
     )
 )
