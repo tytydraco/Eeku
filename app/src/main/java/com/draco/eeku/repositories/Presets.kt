@@ -28,5 +28,18 @@ val Presets = listOf(
             Frequencies.PRESENCE to         5.00f,
             Frequencies.BRILLIANCE to       10.00f
         )
+    ),
+    Preset(
+        "w_shape",
+        "W Shaped",
+        mapOf(
+            Frequencies.SUB_BASS to         10.00f,
+            Frequencies.BASS to             5.00f,
+            Frequencies.LOW_MID to          -5.00f,
+            Frequencies.MID to              5.00f,
+            Frequencies.UPPER_MID to        0.00f,
+            Frequencies.PRESENCE to         5.00f,
+            Frequencies.BRILLIANCE to       10.00f
+        )
     )
 )
