@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
 import android.os.IBinder
 import android.util.Log
@@ -15,7 +16,7 @@ import com.draco.eeku.views.ConfigActivity
 
 class EekuCreateService : Service() {
     private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var eeku: Eeku
+    private var eeku: Eeku? = null
     private lateinit var notificationManager: NotificationManager
     private var sessionId = -1
 
@@ -25,14 +26,11 @@ class EekuCreateService : Service() {
     }
 
     override fun onDestroy() {
-        eeku.disable()
-        notificationManager.cancel(NOTIFICATION_ID)
-        Log.d("Eeku", "Killed Eeku sessionId: $sessionId")
+        destroyEeku()
         super.onDestroy()
     }
 
     private fun createNotificationChannel() {
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             getString(R.string.notif_channel_title),
@@ -56,20 +54,22 @@ class EekuCreateService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
+    private fun cancelNotification() {
+        stopForeground(true)
+        notificationManager.cancel(NOTIFICATION_ID)
+    }
+
     override fun onCreate() {
         super.onCreate()
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-
-        createNotificationChannel()
-        createNotification()
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
+    private fun createEeku() {
         val savedId = sharedPrefs.getString("preset_id", "mask")!!
         val savedPreset = Presets.find { it.id == savedId } ?: Presets[0]
 
@@ -77,6 +77,26 @@ class EekuCreateService : Service() {
         eeku = Eeku(sessionId, savedPreset).also {
             it.enable()
         }
+
+        if (notificationManager.activeNotifications.isEmpty()) {
+            createNotificationChannel()
+            createNotification()
+        }
+    }
+
+    private fun destroyEeku() {
+        Log.d("Eeku", "Killed Eeku sessionId: $sessionId")
+        cancelNotification()
+        eeku?.disable()
+        eeku = null
+    }
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
+        destroyEeku()
+
+        if (intent.action == AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
+            createEeku()
 
         return super.onStartCommand(intent, flags, startId)
     }

@@ -12,20 +12,26 @@ import com.draco.eeku.services.EekuCreateService
 
 class AudioSessionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
-            return
-
         val sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
         if (sessionId == -1)
             return
 
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-
-        if (!sharedPrefs.getBoolean(context.getString(R.string.pref_key_enabled), true))
-            return
-
         val eekuIntent = Intent(context, EekuCreateService::class.java)
-            .putExtra(Equalizer.EXTRA_AUDIO_SESSION, sessionId)
-        context.startForegroundService(eekuIntent)
+                .putExtra(Equalizer.EXTRA_AUDIO_SESSION, sessionId)
+
+        when (intent.action) {
+            AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> {
+                eekuIntent.action = AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION
+                val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+                if (!sharedPrefs.getBoolean(context.getString(R.string.pref_key_enabled), true))
+                    return
+                context.startForegroundService(eekuIntent)
+            }
+
+            AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION -> {
+                eekuIntent.action = AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION
+                context.startForegroundService(eekuIntent)
+            }
+        }
     }
 }
