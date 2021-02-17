@@ -8,7 +8,7 @@
         android:id="@+id/spinner" />
     <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="200dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/chart" />
 </RelativeLayout>

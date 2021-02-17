@@ -9,11 +9,12 @@ import com.github.aachartmodel.aainfographics.aaoptionsmodel.AADataLabels
 
 class PresetChartModelFactory(private val preset: Preset) {
     private val chartModel = AAChartModel()
-        .chartType(AAChartType.Spline)
+        .chartType(AAChartType.Areaspline)
         .dataLabelsEnabled(true)
         .series(getSeries())
         .categories(getCategories())
-        .yAxisTitle("Gain (dB)")
+        .yAxisVisible(false)
+        .xAxisVisible(false)
         .backgroundColor("#000000")
         .yAxisGridLineWidth(0f)
         .axesTextColor("#ffffff")
@@ -21,6 +22,7 @@ class PresetChartModelFactory(private val preset: Preset) {
     private fun getSeries() = arrayOf(
         AASeriesElement()
             .showInLegend(false)
+            .dataLabels(AADataLabels().enabled(false))
             .data(preset.map.values.toTypedArray())
             .color("#ffff00")
     )
