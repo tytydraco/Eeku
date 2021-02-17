@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Spinner
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner" />
+        android:id="@+id/radio_group" />
     <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
         android:layout_width="match_parent"
         android:layout_height="200dp"

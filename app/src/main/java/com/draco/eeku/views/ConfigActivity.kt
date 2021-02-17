@@ -2,10 +2,7 @@ package com.draco.eeku.views
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.RadioGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -13,14 +10,13 @@ import com.draco.eeku.R
 import com.draco.eeku.repositories.Presets
 import com.draco.eeku.utils.PresetChartModelFactory
 import com.draco.eeku.viewmodels.ConfigActivityViewModel
-import com.github.aachartmodel.aainfographics.aachartcreator.*
-import com.github.aachartmodel.aainfographics.aaoptionsmodel.AADataLabels
+import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
 
 class ConfigActivity : AppCompatActivity() {
     private val viewModel: ConfigActivityViewModel by viewModels()
 
     private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var spinner: Spinner
+    private lateinit var radioGroup: RadioGroup
     private lateinit var chart: AAChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,34 +24,21 @@ class ConfigActivity : AppCompatActivity() {
         setContentView(R.layout.activity_config)
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        spinner = findViewById(R.id.spinner)
+        radioGroup = findViewById(R.id.radio_group)
         chart = findViewById(R.id.chart)
 
-        val spinnerAdapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            Presets.map { it.displayName }.toTypedArray()
-        )
+        viewModel.populateRadioGroup(this, radioGroup)
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                sharedPrefs.edit().also {
-                    it.putString(getString(R.string.pref_key_preset_id), Presets[position].id)
-                    it.apply()
-                }
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val presetId = Presets[checkedId].id
+            viewModel.savePresetId(presetId)
 
-                updateChart()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            updateChart()
         }
 
-        spinner.adapter = spinnerAdapter
-
-        val savedPresetIndex = Presets.indexOf(viewModel.getSavedPreset())
-        spinner.setSelection(savedPresetIndex)
-
         updateChart()
+
+        viewModel.selectSavedPresetRadioButton(radioGroup)
     }
 
     private fun updateChart() {
