@@ -16,6 +16,7 @@ import com.draco.eeku.views.ConfigActivity
 class EekuCreateService : Service() {
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var eeku: Eeku
+    private lateinit var notificationManager: NotificationManager
     private var sessionId = -1
 
     companion object {
@@ -25,18 +26,19 @@ class EekuCreateService : Service() {
 
     override fun onDestroy() {
         eeku.disable()
+        notificationManager.cancel(NOTIFICATION_ID)
         Log.d("Eeku", "Killed Eeku sessionId: $sessionId")
         super.onDestroy()
     }
 
     private fun createNotificationChannel() {
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             getString(R.string.notif_channel_title),
             NotificationManager.IMPORTANCE_DEFAULT
         )
-        manager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun createNotification() {
