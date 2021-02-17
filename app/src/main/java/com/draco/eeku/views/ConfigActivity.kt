@@ -11,13 +11,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.draco.eeku.R
 import com.draco.eeku.repositories.Presets
+import com.draco.eeku.utils.PresetChartModelFactory
 import com.draco.eeku.viewmodels.ConfigActivityViewModel
+import com.github.aachartmodel.aainfographics.aachartcreator.*
+import com.github.aachartmodel.aainfographics.aaoptionsmodel.AADataLabels
 
 class ConfigActivity : AppCompatActivity() {
     private val viewModel: ConfigActivityViewModel by viewModels()
 
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var spinner: Spinner
+    private lateinit var chart: AAChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +29,7 @@ class ConfigActivity : AppCompatActivity() {
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
         spinner = findViewById(R.id.spinner)
+        chart = findViewById(R.id.chart)
 
         val spinnerAdapter = ArrayAdapter(
             this,
@@ -38,6 +43,8 @@ class ConfigActivity : AppCompatActivity() {
                     it.putString(getString(R.string.pref_key_preset_id), Presets[position].id)
                     it.apply()
                 }
+
+                updateChart()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -47,5 +54,13 @@ class ConfigActivity : AppCompatActivity() {
 
         val savedPresetIndex = Presets.indexOf(viewModel.getSavedPreset())
         spinner.setSelection(savedPresetIndex)
+
+        updateChart()
+    }
+
+    private fun updateChart() {
+        val savedPreset = viewModel.getSavedPreset()
+        val chartModel = PresetChartModelFactory(savedPreset).create()
+        chart.aa_drawChartWithChartModel(chartModel)
     }
 }
