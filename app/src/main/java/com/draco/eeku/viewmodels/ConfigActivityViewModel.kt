@@ -9,6 +9,8 @@ import androidx.preference.PreferenceManager
 import com.draco.eeku.R
 import com.draco.eeku.models.Preset
 import com.draco.eeku.repositories.Presets
+import com.draco.eeku.utils.PresetChartModelFactory
+import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
 
 class ConfigActivityViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application.applicationContext
@@ -44,5 +46,11 @@ class ConfigActivityViewModel(application: Application) : AndroidViewModel(appli
             }
             radioGroup.addView(radioButton)
         }
+    }
+
+    fun updateChart(chart: AAChartView) {
+        val savedPreset = getSavedPreset()
+        val chartModel = PresetChartModelFactory(savedPreset).create()
+        chart.aa_drawChartWithChartModel(chartModel)
     }
 }

@@ -27,23 +27,15 @@ class ConfigActivity : AppCompatActivity() {
         radioGroup = findViewById(R.id.radio_group)
         chart = findViewById(R.id.chart)
 
-        viewModel.populateRadioGroup(this, radioGroup)
-
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val presetId = Presets[checkedId].id
             viewModel.savePresetId(presetId)
 
-            updateChart()
+            viewModel.updateChart(chart)
         }
 
-        updateChart()
-
+        viewModel.populateRadioGroup(this, radioGroup)
         viewModel.selectSavedPresetRadioButton(radioGroup)
-    }
-
-    private fun updateChart() {
-        val savedPreset = viewModel.getSavedPreset()
-        val chartModel = PresetChartModelFactory(savedPreset).create()
-        chart.aa_drawChartWithChartModel(chartModel)
+        viewModel.updateChart(chart)
     }
 }
