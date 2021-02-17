@@ -56,13 +56,12 @@ class ConfigActivityViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun updateEnabledSwitch(switch: SwitchMaterial) {
-        //TODO: Put string in xml
-        switch.isChecked = sharedPrefs.getBoolean("enabled", true)
+        switch.isChecked = sharedPrefs.getBoolean(context.getString(R.string.pref_key_enabled), true)
     }
 
     fun saveEnabled(enabled: Boolean) {
         sharedPrefs.edit().also {
-            it.putBoolean("enabled", enabled)
+            it.putBoolean(context.getString(R.string.pref_key_enabled), enabled)
             it.apply()
         }
     }

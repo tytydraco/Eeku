@@ -6,6 +6,7 @@
     <string name="switch_enable">Activate Eeku</string>
 
     <string name="pref_key_preset_id">preset_id</string>
+    <string name="pref_key_enabled">enabled</string>
 
     <string name="pref_title_preset_dropdown">Preset</string>
     <string name="pref_summary_preset_dropdown">Select an equalizer preset</string>
