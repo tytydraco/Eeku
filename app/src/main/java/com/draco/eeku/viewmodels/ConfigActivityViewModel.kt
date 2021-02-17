@@ -11,6 +11,7 @@ import com.draco.eeku.models.Preset
 import com.draco.eeku.repositories.Presets
 import com.draco.eeku.utils.PresetChartModelFactory
 import com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class ConfigActivityViewModel(application: Application) : AndroidViewModel(application) {
     private val context = application.applicationContext
@@ -52,5 +53,17 @@ class ConfigActivityViewModel(application: Application) : AndroidViewModel(appli
         val savedPreset = getSavedPreset()
         val chartModel = PresetChartModelFactory(savedPreset).create()
         chart.aa_drawChartWithChartModel(chartModel)
+    }
+
+    fun updateEnabledSwitch(switch: SwitchMaterial) {
+        //TODO: Put string in xml
+        switch.isChecked = sharedPrefs.getBoolean("enabled", true)
+    }
+
+    fun saveEnabled(enabled: Boolean) {
+        sharedPrefs.edit().also {
+            it.putBoolean("enabled", enabled)
+            it.apply()
+        }
     }
 }

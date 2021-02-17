@@ -6,6 +6,7 @@ import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.draco.eeku.services.EekuCreateService
 
 class AudioSessionReceiver : BroadcastReceiver() {
@@ -15,6 +16,11 @@ class AudioSessionReceiver : BroadcastReceiver() {
 
         val sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
         if (sessionId == -1)
+            return
+
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+        if (!sharedPrefs.getBoolean("enabled", true))
             return
 
         val eekuIntent = Intent(context, EekuCreateService::class.java)
