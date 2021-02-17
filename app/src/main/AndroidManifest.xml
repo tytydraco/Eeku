@@ -3,6 +3,7 @@
     package="com.draco.eeku">
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +16,6 @@
         <activity android:name=".views.ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -24,6 +24,7 @@
                 <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION"/>
             </intent-filter>
         </receiver>
+        <service android:name=".services.EekuCreateService" />
     </application>
 
 </manifest>

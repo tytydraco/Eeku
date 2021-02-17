@@ -8,4 +8,8 @@
     <string name="pref_title_preset_dropdown">Preset</string>
     <string name="pref_summary_preset_dropdown">Select an equalizer preset</string>
     <string name="pref_key_preset_dropdown">preset_dropdown</string>
+
+    <string name="notif_channel_title">Eeku</string>
+    <string name="notif_title">Eeku</string>
+    <string name="notif_text">Equalizer is operating.</string>
 </resources>
