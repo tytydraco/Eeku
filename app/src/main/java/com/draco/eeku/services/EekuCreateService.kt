@@ -16,17 +16,16 @@ import com.draco.eeku.views.ConfigActivity
 
 class EekuCreateService : Service() {
     private lateinit var sharedPrefs: SharedPreferences
-    private var eeku: Eeku? = null
     private lateinit var notificationManager: NotificationManager
-    private var sessionId = -1
+
+    private var sessionEekuMap = mutableMapOf<Int, Eeku>()
 
     companion object {
-        private const val NOTIFICATION_ID = 1
         private const val NOTIFICATION_CHANNEL_ID = "EekuChannel"
     }
 
     override fun onDestroy() {
-        destroyEeku()
+        sessionEekuMap.values.forEach { it.disable() }
         super.onDestroy()
     }
 
@@ -39,64 +38,67 @@ class EekuCreateService : Service() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun createNotification() {
+    private fun createNotification(sessionId: Int) {
         val pendingIntent = Intent(this, ConfigActivity::class.java).let { notificationIntent ->
             PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         }
 
         val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_text))
+            .setContentText(getString(R.string.notif_text) + sessionId.toString())
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .build()
 
-        startForeground(NOTIFICATION_ID, notification)
+        startForeground(sessionId, notification)
     }
 
-    private fun cancelNotification() {
+    private fun cancelNotification(sessionId: Int) {
         stopForeground(true)
-        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager.cancel(sessionId)
     }
 
     override fun onCreate() {
         super.onCreate()
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        createNotificationChannel()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
-    private fun createEeku() {
+    private fun createEeku(sessionId: Int) {
         val savedId = sharedPrefs.getString("preset_id", "mask")!!
         val savedPreset = Presets.find { it.id == savedId } ?: Presets[0]
 
         Log.d("Eeku", "Setup Eeku (${savedPreset.displayName}) sessionId: $sessionId")
-        eeku = Eeku(sessionId, savedPreset).also {
+        val eeku = Eeku(sessionId, savedPreset).also {
             it.enable()
         }
 
         if (notificationManager.activeNotifications.isEmpty()) {
-            createNotificationChannel()
-            createNotification()
+            createNotification(sessionId)
         }
+
+        sessionEekuMap[sessionId] = eeku
     }
 
-    private fun destroyEeku() {
+    private fun destroyEeku(sessionId: Int) {
         Log.d("Eeku", "Killed Eeku sessionId: $sessionId")
-        cancelNotification()
-        eeku?.disable()
-        eeku = null
+        cancelNotification(sessionId)
+        sessionEekuMap[sessionId]?.disable()
+        sessionEekuMap.remove(sessionId)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
-        destroyEeku()
+        val sessionId = intent.getIntExtra(Equalizer.EXTRA_AUDIO_SESSION, -1)
 
-        if (intent.action == AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION)
-            createEeku()
+        when (intent.action) {
+            AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION -> createEeku(sessionId)
+            AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION -> destroyEeku(sessionId)
+        }
 
         return super.onStartCommand(intent, flags, startId)
     }
