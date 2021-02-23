@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="200dp"
     android:orientation="vertical">
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/switch_enable"
-        android:id="@+id/enabled" />
-    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/title" />
+    <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycler" />
+        android:id="@+id/chart" />
 </LinearLayout>

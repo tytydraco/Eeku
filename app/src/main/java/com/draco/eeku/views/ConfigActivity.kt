@@ -6,7 +6,10 @@ import android.widget.RadioGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.draco.eeku.R
+import com.draco.eeku.adapters.SelectRecyclerAdapter
 import com.draco.eeku.repositories.Presets
 import com.draco.eeku.utils.PresetChartModelFactory
 import com.draco.eeku.viewmodels.ConfigActivityViewModel
@@ -17,33 +20,32 @@ class ConfigActivity : AppCompatActivity() {
     private val viewModel: ConfigActivityViewModel by viewModels()
 
     private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var radioGroup: RadioGroup
-    private lateinit var chart: AAChartView
     private lateinit var enabledSwitch: SwitchMaterial
+    private lateinit var recycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_config)
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
-        radioGroup = findViewById(R.id.radio_group)
-        chart = findViewById(R.id.chart)
         enabledSwitch = findViewById(R.id.enabled)
+        recycler = findViewById(R.id.recycler)
 
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+        /*radioGroup.setOnCheckedChangeListener { _, checkedId ->
             val presetId = Presets[checkedId].id
             viewModel.savePresetId(presetId)
+        }*/
 
-            viewModel.updateChart(chart)
-        }
-
-        viewModel.populateRadioGroup(this, radioGroup)
-        viewModel.selectSavedPresetRadioButton(radioGroup)
-        viewModel.updateChart(chart)
+        //viewModel.selectSavedPresetRadioButton(radioGroup)
         viewModel.updateEnabledSwitch(enabledSwitch)
 
         enabledSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveEnabled(isChecked)
+        }
+
+        recycler.apply {
+            adapter = SelectRecyclerAdapter()
+            layoutManager = LinearLayoutManager(this@ConfigActivity)
         }
     }
 }

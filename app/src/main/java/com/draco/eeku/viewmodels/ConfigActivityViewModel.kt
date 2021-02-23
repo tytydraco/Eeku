@@ -33,28 +33,6 @@ class ConfigActivityViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    fun selectSavedPresetRadioButton(radioGroup: RadioGroup) {
-        val savedPresetIndex = Presets.indexOf(getSavedPreset())
-        (radioGroup.getChildAt(savedPresetIndex) as RadioButton).isChecked = true
-    }
-
-    fun populateRadioGroup(activity: Activity, radioGroup: RadioGroup) {
-        for (index in Presets.indices) {
-            val preset = Presets[index]
-            val radioButton = RadioButton(activity).also {
-                it.id = index
-                it.text = preset.displayName
-            }
-            radioGroup.addView(radioButton)
-        }
-    }
-
-    fun updateChart(chart: AAChartView) {
-        val savedPreset = getSavedPreset()
-        val chartModel = PresetChartModelFactory(savedPreset).create()
-        chart.aa_drawChartWithChartModel(chartModel)
-    }
-
     fun updateEnabledSwitch(switch: SwitchMaterial) {
         switch.isChecked = sharedPrefs.getBoolean(context.getString(R.string.pref_key_enabled), true)
     }
