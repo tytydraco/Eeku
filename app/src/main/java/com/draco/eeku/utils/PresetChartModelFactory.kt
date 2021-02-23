@@ -15,9 +15,8 @@ class PresetChartModelFactory(private val preset: Preset) {
         .categories(getCategories())
         .yAxisVisible(false)
         .xAxisVisible(false)
-        .backgroundColor("#000000")
+        .backgroundColor("#00000000")
         .yAxisGridLineWidth(0f)
-        .axesTextColor("#ffffff")
 
     private fun getSeries() = arrayOf(
         AASeriesElement()
