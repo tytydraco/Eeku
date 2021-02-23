@@ -5,10 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.media.audiofx.Equalizer
-import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.draco.eeku.R
-import com.draco.eeku.services.EekuCreateService
+import com.draco.eeku.services.EekuManagerService
 
 class AudioSessionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -16,7 +15,7 @@ class AudioSessionReceiver : BroadcastReceiver() {
         if (sessionId == -1)
             return
 
-        val eekuIntent = Intent(context, EekuCreateService::class.java)
+        val eekuIntent = Intent(context, EekuManagerService::class.java)
                 .putExtra(Equalizer.EXTRA_AUDIO_SESSION, sessionId)
 
         when (intent.action) {

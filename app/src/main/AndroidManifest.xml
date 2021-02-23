@@ -25,7 +25,7 @@
                 <action android:name="android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION" />
             </intent-filter>
         </receiver>
-        <service android:name=".services.EekuCreateService" />
+        <service android:name=".services.EekuManagerService" />
     </application>
 
 </manifest>

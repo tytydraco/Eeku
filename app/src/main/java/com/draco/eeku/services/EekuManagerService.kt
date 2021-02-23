@@ -14,15 +14,11 @@ import com.draco.eeku.repositories.Presets
 import com.draco.eeku.utils.Eeku
 import com.draco.eeku.views.ConfigActivity
 
-class EekuCreateService : Service() {
+class EekuManagerService : Service() {
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var notificationManager: NotificationManager
 
     private var sessionEekuMap = mutableMapOf<Int, Eeku>()
-
-    companion object {
-        private const val NOTIFICATION_CHANNEL_ID = "EekuChannel"
-    }
 
     override fun onDestroy() {
         sessionEekuMap.values.forEach { it.disable() }
@@ -31,7 +27,7 @@ class EekuCreateService : Service() {
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
+            getString(R.string.notif_channel_id),
             getString(R.string.notif_channel_title),
             NotificationManager.IMPORTANCE_DEFAULT
         )
@@ -43,7 +39,7 @@ class EekuCreateService : Service() {
             PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         }
 
-        val notification = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notification = Notification.Builder(this, getString(R.string.notif_channel_id))
             .setContentTitle(getString(R.string.notif_title))
             .setContentText(getString(R.string.notif_text) + sessionId.toString())
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -70,7 +66,7 @@ class EekuCreateService : Service() {
     }
 
     private fun createEeku(sessionId: Int) {
-        val savedId = sharedPrefs.getString("preset_id", "mask")!!
+        val savedId = sharedPrefs.getString(getString(R.string.pref_key_preset_id), null) ?: Presets[0].id
         val savedPreset = Presets.find { it.id == savedId } ?: Presets[0]
 
         Log.d("Eeku", "Setup Eeku (${savedPreset.displayName}) sessionId: $sessionId")
