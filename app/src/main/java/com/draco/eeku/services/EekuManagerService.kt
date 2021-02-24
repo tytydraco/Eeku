@@ -62,6 +62,11 @@ class EekuManagerService : Service() {
         super.onCreate()
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (notificationManager.activeNotifications.isEmpty()) {
+            createNotificationChannel()
+            createNotification()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -82,11 +87,6 @@ class EekuManagerService : Service() {
         }
 
         sessionEekuMap[sessionId] = eeku
-
-        if (notificationManager.activeNotifications.isEmpty() && sessionEekuMap.isNotEmpty()) {
-            createNotificationChannel()
-            createNotification()
-        }
     }
 
     private fun destroyEeku(sessionId: Int) {
@@ -94,8 +94,10 @@ class EekuManagerService : Service() {
         sessionEekuMap[sessionId]?.disable()
         sessionEekuMap.remove(sessionId)
 
-        if (sessionEekuMap.isEmpty())
-            cancelNotification()
+        if (sessionEekuMap.isEmpty()) {
+            stopForeground(true)
+            stopSelf()
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
