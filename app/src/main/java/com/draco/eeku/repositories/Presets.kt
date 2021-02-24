@@ -1,6 +1,5 @@
 package com.draco.eeku.repositories
 
-import android.graphics.Color
 import com.draco.eeku.models.Preset
 
 val Presets = listOf(

@@ -5,10 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.draco.eeku.R
-import com.draco.eeku.adapters.SelectRecyclerAdapter
 import com.draco.eeku.viewmodels.ConfigActivityViewModel
 
 class ConfigActivity : AppCompatActivity() {

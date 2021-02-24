@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.draco.eeku.R
-import com.draco.eeku.models.Preset
 import com.draco.eeku.repositories.Presets
 import com.google.android.material.card.MaterialCardView
 

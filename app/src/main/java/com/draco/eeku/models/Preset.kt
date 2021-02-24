@@ -1,7 +1,5 @@
 package com.draco.eeku.models
 
-import android.graphics.Color
-
 data class Preset(
     val id: String,
     val title: String,

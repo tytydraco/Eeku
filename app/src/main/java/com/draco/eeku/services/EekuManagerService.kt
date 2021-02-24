@@ -53,11 +53,6 @@ class EekuManagerService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
-    private fun cancelNotification() {
-        stopForeground(true)
-        notificationManager.cancel(NOTIFICATION_ID)
-    }
-
     override fun onCreate() {
         super.onCreate()
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
