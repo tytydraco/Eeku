@@ -20,6 +20,10 @@ class EekuManagerService : Service() {
 
     private var sessionEekuMap = mutableMapOf<Int, Eeku>()
 
+    companion object {
+        const val NOTIFICATION_ID = 1
+    }
+
     override fun onDestroy() {
         sessionEekuMap.values.forEach { it.disable() }
         super.onDestroy()
@@ -34,24 +38,24 @@ class EekuManagerService : Service() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun createNotification(sessionId: Int) {
+    private fun createNotification() {
         val pendingIntent = Intent(this, ConfigActivity::class.java).let { notificationIntent ->
             PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
         }
 
         val notification = Notification.Builder(this, getString(R.string.notif_channel_id))
             .setContentTitle(getString(R.string.notif_title))
-            .setContentText(getString(R.string.notif_text) + sessionId.toString())
+            .setContentText(getString(R.string.notif_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .build()
 
-        startForeground(sessionId, notification)
+        startForeground(NOTIFICATION_ID, notification)
     }
 
-    private fun cancelNotification(sessionId: Int) {
+    private fun cancelNotification() {
         stopForeground(true)
-        notificationManager.cancel(sessionId)
+        notificationManager.cancel(NOTIFICATION_ID)
     }
 
     override fun onCreate() {
@@ -77,19 +81,21 @@ class EekuManagerService : Service() {
             it.enable()
         }
 
-        if (notificationManager.activeNotifications.isEmpty()) {
-            createNotificationChannel()
-            createNotification(sessionId)
-        }
-
         sessionEekuMap[sessionId] = eeku
+
+        if (notificationManager.activeNotifications.isEmpty() && sessionEekuMap.isNotEmpty()) {
+            createNotificationChannel()
+            createNotification()
+        }
     }
 
     private fun destroyEeku(sessionId: Int) {
         Log.d("Eeku", "Killed Eeku sessionId: $sessionId")
-        cancelNotification(sessionId)
         sessionEekuMap[sessionId]?.disable()
         sessionEekuMap.remove(sessionId)
+
+        if (sessionEekuMap.isEmpty())
+            cancelNotification()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
