@@ -1,11 +1,14 @@
 package com.draco.eeku.repositories
 
+import android.graphics.Color
 import com.draco.eeku.models.Preset
 
 val Presets = listOf(
     Preset(
         "mask",
         "Flat",
+        "No adjustments",
+        "#78909c",
         mapOf(
             Frequencies.SUB_BASS to         0.00f,
             Frequencies.BASS to             0.00f,
@@ -19,6 +22,8 @@ val Presets = listOf(
     Preset(
         "v_shape",
         "V Shaped",
+        "Elevated lows and highs with recessed mids",
+        "#ff5252",
         mapOf(
             Frequencies.SUB_BASS to         10.00f,
             Frequencies.BASS to             5.00f,
@@ -32,6 +37,8 @@ val Presets = listOf(
     Preset(
         "w_shape",
         "W Shaped",
+        "Elevated lows, highs, and vocals",
+        "#2196f3",
         mapOf(
             Frequencies.SUB_BASS to         10.00f,
             Frequencies.BASS to             5.00f,

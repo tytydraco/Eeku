@@ -58,7 +58,6 @@ class EekuManagerService : Service() {
         super.onCreate()
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -69,12 +68,17 @@ class EekuManagerService : Service() {
         val savedId = sharedPrefs.getString(getString(R.string.pref_key_preset_id), null) ?: Presets[0].id
         val savedPreset = Presets.find { it.id == savedId } ?: Presets[0]
 
-        Log.d("Eeku", "Setup Eeku (${savedPreset.displayName}) sessionId: $sessionId")
+        /* Chose flat preset, nothing needed */
+        if (savedPreset == Presets[0])
+            return
+
+        Log.d("Eeku", "Setup Eeku (${savedPreset.title}) sessionId: $sessionId")
         val eeku = Eeku(sessionId, savedPreset).also {
             it.enable()
         }
 
         if (notificationManager.activeNotifications.isEmpty()) {
+            createNotificationChannel()
             createNotification(sessionId)
         }
 
