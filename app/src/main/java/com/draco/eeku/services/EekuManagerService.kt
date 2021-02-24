@@ -33,7 +33,7 @@ class EekuManagerService : Service() {
         val channel = NotificationChannel(
             getString(R.string.notif_channel_id),
             getString(R.string.notif_channel_title),
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_NONE
         )
         notificationManager.createNotificationChannel(channel)
     }
@@ -46,7 +46,7 @@ class EekuManagerService : Service() {
         val notification = Notification.Builder(this, getString(R.string.notif_channel_id))
             .setContentTitle(getString(R.string.notif_title))
             .setContentText(getString(R.string.notif_text))
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_baseline_equalizer_24)
             .setContentIntent(pendingIntent)
             .build()
 
