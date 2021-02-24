@@ -108,6 +108,6 @@ class EekuManagerService : Service() {
             AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION -> destroyEeku(sessionId)
         }
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 }
